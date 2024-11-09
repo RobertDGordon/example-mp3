@@ -7,7 +7,7 @@ import { eventsData } from "./eventsData";
 function CalendarPage() {
   const localizer = momentLocalizer(moment);
 
-  console.log('Calendar.jsx example start:', moment('11/23/2024 14:30').toDate())
+  console.log('Calendar.jsx example start:', moment('11/23/2024 14:30', 'MM/DD/YYYY HH:mm').toDate())
 
   // const singleEvent = {
   //   startDay: "11/23/2024",
@@ -43,9 +43,9 @@ function CalendarPage() {
 
         const convertedEvents = eventsData.map((event) => {
           return {
-            start: moment(`${event.startDay} ${event.startTime}`),
-            end: moment(`${event.endDay} ${event.endTime}`),
-            title: event.title
+            start: moment(`${event.startDay} ${event.startTime}`, 'MM/DD/YYYY HH:mm'),
+            end: moment(`${event.endDay} ${event.endTime}`, 'MM/DD/YYYY HH:mm'),
+            title: `${event.title} ${event.startTime} - ${event.endTime}`
           }
         })
 
