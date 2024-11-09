@@ -3,6 +3,7 @@ import "./App.css";
 import PostForm from "./components/PostForm";
 import PostList from "./components/PostList";
 import CalendarPage from './components/CalendarPage';
+import CalendarModal from './components/CalendarModal';
 
 function App() {
   const [posts, setPosts] = useState([])

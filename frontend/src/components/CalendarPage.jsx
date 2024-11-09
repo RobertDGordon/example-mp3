@@ -2,13 +2,19 @@ import React, {useState, useEffect} from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import './calendar.css'
 import { eventsData } from "./eventsData";
+import CalendarModal from "./CalendarModal";
 
 function CalendarPage() {
   const localizer = momentLocalizer(moment);
 
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [modalEventId, setModalEventId] = useState(null)
+
   console.log('Calendar.jsx example start:', moment('11/23/2024 14:30', 'MM/DD/YYYY HH:mm').toDate())
 
+  // Examples of what the shape of the data could look like in the backend
   // const singleEvent = {
   //   startDay: "11/23/2024",
   //   startTime: "9:00",
@@ -25,6 +31,7 @@ function CalendarPage() {
   //   title: "Nap!"
   // }
 
+  // Convert an event to moment format
   // const [events, setEvents] = useState([
   //   {
   //     start: moment(`${singleEvent.startDay} ${singleEvent.startTime}`).toDate(),
@@ -43,6 +50,7 @@ function CalendarPage() {
 
         const convertedEvents = eventsData.map((event) => {
           return {
+            id: event.id,
             start: moment(`${event.startDay} ${event.startTime}`, 'MM/DD/YYYY HH:mm'),
             end: moment(`${event.endDay} ${event.endTime}`, 'MM/DD/YYYY HH:mm'),
             title: `${event.title} ${event.startTime} - ${event.endTime}`
@@ -58,18 +66,21 @@ function CalendarPage() {
   
   const handleSelectEvent = (e)=>{
     console.log('Event click:', e)
+    setModalEventId(e.id)
+    setIsOpen(true)
   }
 
   return (
-    <div className="App">
+    <div>
       <Calendar
         localizer={localizer}
         defaultDate={new Date()}
         defaultView="month"
         events={events}
-        style={{ height: "50vh"}}
+        style={{ height: "50vh", zIndex: 0}}
         onSelectEvent={handleSelectEvent}
       />
+      <CalendarModal modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} modalEventId={modalEventId}/>
     </div>
   );
 }
