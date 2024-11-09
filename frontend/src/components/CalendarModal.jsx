@@ -32,7 +32,7 @@ function CalendarModal(props) {
     endTime: "",
   });
 
-  const { modalIsOpen, setIsOpen, modalEventId } = props;
+  const { modalIsOpen, setIsOpen, modalEventId, newEvent } = props;
 
   function openModal() {
     setIsOpen(true);
@@ -53,7 +53,7 @@ function CalendarModal(props) {
   useEffect(() => {
     // on modal load, use the modal id to fetch
     // check if there is an id
-    if (modalEventId) {
+    if (modalEventId > 0) {
       // fetch localhost:8000/api/events/${modalEventId}
       // .then((response) => response.json())
       // .then((data) => {
@@ -62,8 +62,15 @@ function CalendarModal(props) {
         console.log("Example data:", example, "from:", modalEventId);
         setModalEvent(example[0]);
       // })
+    } else if (modalEventId === 0) {
+      console.log('New Event:', newEvent)
+      setModalEvent(newEvent)
     }
-  }, [modalEventId]); //use the dep array to re-run this effect to get the correct data
+
+    return ()=> {
+      //clean up
+    }
+  }, [modalEventId, newEvent]); //use the dep array to re-run this effect to get the correct data
 
   return (
     <>
@@ -74,7 +81,7 @@ function CalendarModal(props) {
         style={customStyles}
         contentLabel="Event Modal"
       >
-        <h2>{modalEvent.title}</h2>
+        <h2>{modalEvent?.title}</h2>
         <label>
           Title:
           <input

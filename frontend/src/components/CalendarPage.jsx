@@ -11,6 +11,7 @@ function CalendarPage() {
 
   const [modalIsOpen, setIsOpen] = useState(false);
   const [modalEventId, setModalEventId] = useState(null)
+  const [newEvent, setNewEvent] = useState({})
 
   console.log('Calendar.jsx example start:', moment('11/23/2024 14:30', 'MM/DD/YYYY HH:mm').toDate())
 
@@ -51,8 +52,8 @@ function CalendarPage() {
         const convertedEvents = eventsData.map((event) => {
           return {
             id: event.id,
-            start: moment(`${event.startDay} ${event.startTime}`, 'MM/DD/YYYY HH:mm'),
-            end: moment(`${event.endDay} ${event.endTime}`, 'MM/DD/YYYY HH:mm'),
+            start: moment(`${event.startDay} ${event.startTime}`, 'MM/DD/YYYY HH:mm').toDate(),
+            end: moment(`${event.endDay} ${event.endTime}`, 'MM/DD/YYYY HH:mm').toDate(),
             title: `${event.title} ${event.startTime} - ${event.endTime}`
           }
         })
@@ -64,9 +65,37 @@ function CalendarPage() {
   }, [])
   
   
-  const handleSelectEvent = (e)=>{
+  const handleSelectEvent = (e) => {
     console.log('Event click:', e)
     setModalEventId(e.id)
+    setIsOpen(true)
+  }
+
+  const stringDate = (date) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0') //Add padding at start
+    const day = String(date.getDate()).padStart(2, '0') //Add padding at start
+
+    return `${month}/${day}/${year}`
+  }
+
+  const stringTime = (date) => {
+    const hour = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+
+    return `${hour}:${minutes}`
+  }
+
+  const handleSelectSlot = (e) => {
+    console.log('Slot click:', e)
+    setModalEventId(0)
+    setNewEvent({
+      title: "New Event",
+      startDay: stringDate(e.start),
+      startTime: stringTime(e.start),
+      endDay: stringDate(e.end),
+      endTime: stringTime(e.end)
+    })
     setIsOpen(true)
   }
 
@@ -78,9 +107,12 @@ function CalendarPage() {
         defaultView="month"
         events={events}
         style={{ height: "50vh", zIndex: 0}}
+        selectable={true}
+        longPressThreshold={20} 
         onSelectEvent={handleSelectEvent}
+        onSelectSlot={handleSelectSlot}
       />
-      <CalendarModal modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} modalEventId={modalEventId}/>
+      <CalendarModal modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} modalEventId={modalEventId} newEvent={newEvent}/>
     </div>
   );
 }
